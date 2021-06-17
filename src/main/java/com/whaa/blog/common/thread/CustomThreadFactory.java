@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * created by wangzelong 2021-06-17 17:10
  */
 public class CustomThreadFactory implements ThreadFactory {
-    private final AtomicInteger POOL_NUMBER = new AtomicInteger(1);
     private final ThreadGroup group;
     private final AtomicInteger threadNumber = new AtomicInteger(1);
     private final String namePrefix;
@@ -15,7 +14,8 @@ public class CustomThreadFactory implements ThreadFactory {
     public CustomThreadFactory() {
         SecurityManager s = System.getSecurityManager();
         group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-        namePrefix = "whaa-pool-" + POOL_NUMBER.getAndIncrement() + "-thread-";
+        AtomicInteger poolNumber = new AtomicInteger(1);
+        namePrefix = "whaa-pool-" + poolNumber.getAndIncrement() + "-thread-";
     }
 
     @Override
