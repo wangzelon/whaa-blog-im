@@ -20,7 +20,7 @@ public class ThreadPoolManager {
         final int cpu = Runtime.getRuntime().availableProcessors();
         final int corePoolSize = cpu + 1;
         final int maximumPoolSize = cpu * 2 + 1;
-        final long keepAliveTime = 1L;
+        final long keepAliveTime = 3L;
         final TimeUnit timeUnit = TimeUnit.SECONDS;
         final int maxQueueNum = 128;
 
