@@ -5,7 +5,7 @@ import com.whaa.blog.chat.netty.protocol.response.LoginResponsePacket;
 import com.whaa.blog.chat.netty.protocol.response.MessageResponsePacket;
 import com.whaa.blog.chat.netty.protocol.Packet;
 import com.whaa.blog.chat.netty.protocol.PacketCodeC;
-import com.whaa.blog.chat.util.LoginUtil;
+import com.whaa.blog.common.util.LoginUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

@@ -1,4 +1,4 @@
-package com.whaa.blog.chat.util;
+package com.whaa.blog.common.util;
 
 import com.whaa.blog.chat.netty.protocol.Attributes;
 import io.netty.channel.Channel;

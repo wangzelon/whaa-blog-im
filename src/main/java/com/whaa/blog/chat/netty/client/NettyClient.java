@@ -3,7 +3,8 @@ package com.whaa.blog.chat.netty.client;
 import com.whaa.blog.chat.netty.handler.ClientHandler;
 import com.whaa.blog.chat.netty.protocol.request.MessageRequestPacket;
 import com.whaa.blog.chat.netty.protocol.PacketCodeC;
-import com.whaa.blog.chat.util.LoginUtil;
+import com.whaa.blog.common.thread.ThreadPoolManager;
+import com.whaa.blog.common.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -23,7 +24,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyClient {
 
-    static   int MAX_RETRY=5;
+    static int MAX_RETRY = 5;
+
     public static void main(String[] args) {
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
 
@@ -51,7 +53,7 @@ public class NettyClient {
         bootstrap.connect(addr, port).addListener(future -> {
             //连接成功
             if (future.isSuccess()) {
-                Channel channel = ((ChannelFuture) future).channel();
+                Channel channel = ((ChannelFuture)future).channel();
                 // 连接成功之后，启动控制台线程
                 startConsoleThread(channel);
             } else if (retry == 0) {
@@ -66,8 +68,9 @@ public class NettyClient {
             }
         });
     }
+
     private static void startConsoleThread(Channel channel) {
-        new Thread(() -> {
+        ThreadPoolManager.getInstance().execute(() -> {
             while (!Thread.interrupted()) {
                 if (LoginUtil.hasLogin(channel)) {
                     System.out.println("输入消息发送至服务端: ");
@@ -80,6 +83,6 @@ public class NettyClient {
                     channel.writeAndFlush(byteBuf);
                 }
             }
-        }).start();
+        });
     }
 }
