@@ -1,5 +1,11 @@
 package com.whaa.blog.chat.netty.server;
 
+import com.whaa.blog.chat.netty.event.InBoundHandlerA;
+import com.whaa.blog.chat.netty.event.InBoundHandlerB;
+import com.whaa.blog.chat.netty.event.InBoundHandlerC;
+import com.whaa.blog.chat.netty.event.OutBoundHandlerA;
+import com.whaa.blog.chat.netty.event.OutBoundHandlerB;
+import com.whaa.blog.chat.netty.event.OutBoundHandlerC;
 import com.whaa.blog.chat.netty.handler.ServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -21,12 +27,18 @@ public class NettyServer {
         serverBootstrap
                 .group(boss, worker)
                 .childOption(ChannelOption.SO_KEEPALIVE,true)
-                .attr(AttributeKey.newInstance("hello"), "world")
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
-                        ch.pipeline().addLast(new ServerHandler());
+//                        ch.pipeline().addLast(new ServerHandler());
+                        ch.pipeline().addLast(new InBoundHandlerA());
+                        ch.pipeline().addLast(new InBoundHandlerB());
+                        ch.pipeline().addLast(new InBoundHandlerC());
+
+                        ch.pipeline().addLast(new OutBoundHandlerA());
+                        ch.pipeline().addLast(new OutBoundHandlerB());
+                        ch.pipeline().addLast(new OutBoundHandlerC());
                     }
                 });
         bind(serverBootstrap, 1000);
