@@ -4,6 +4,8 @@ import com.whaa.blog.chat.netty.codec.PacketDecoder;
 import com.whaa.blog.chat.netty.codec.PacketEncoder;
 import com.whaa.blog.chat.netty.demo.FirstServerHandler;
 import com.whaa.blog.chat.netty.protocol.Spliter;
+import com.whaa.blog.chat.netty.server.handler.AuthHandler;
+import com.whaa.blog.chat.netty.server.handler.LifeCyCleTestHandler;
 import com.whaa.blog.chat.netty.server.handler.LoginRequestHandler;
 import com.whaa.blog.chat.netty.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -34,11 +36,13 @@ public class NettyServer {
                         //测试沾包, LineBasedFrameDecoder行拆包器
 //                        ch.pipeline().addLast(new LineBasedFrameDecoder(100));
 //                        ch.pipeline().addLast(new FirstServerHandler());
+//                        ch.pipeline().addLast(new LifeCyCleTestHandler());//测试ChannelHandler生命周期
                         ch.pipeline().addLast(new Spliter());  //拆包器
                         ch.pipeline().addLast(new PacketDecoder());  //解码器
                         ch.pipeline().addLast(new LoginRequestHandler());//登录处理器
+                        ch.pipeline().addLast(new AuthHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());//消息处理器
-                        ch.pipeline().addLast(new PacketEncoder()); //编码器
+                        ch.pipeline().addLast(new PacketEncoder()); // 编码器
                     }
                 });
         bind(serverBootstrap, 1000);

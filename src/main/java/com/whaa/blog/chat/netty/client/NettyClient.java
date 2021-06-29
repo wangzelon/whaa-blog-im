@@ -5,9 +5,11 @@ import com.whaa.blog.chat.netty.client.handler.MessageResponseHandler;
 import com.whaa.blog.chat.netty.codec.PacketDecoder;
 import com.whaa.blog.chat.netty.codec.PacketEncoder;
 import com.whaa.blog.chat.netty.protocol.Spliter;
+import com.whaa.blog.chat.netty.protocol.request.LoginRequestPacket;
 import com.whaa.blog.chat.netty.protocol.request.MessageRequestPacket;
 import com.whaa.blog.common.thread.ThreadPoolManager;
 import com.whaa.blog.common.util.LoginUtil;
+import com.whaa.blog.common.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -80,12 +82,26 @@ public class NettyClient {
 
     private static void startConsoleThread(Channel channel) {
         ThreadPoolManager.getInstance().execute(() -> {
+            LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+            Scanner sc = new Scanner(System.in);
             while (!Thread.interrupted()) {
-                if (LoginUtil.hasLogin(channel)) {
-                    System.out.println("输入消息发送至服务端: ");
-                    Scanner sc = new Scanner(System.in);
-                    String line = sc.nextLine();
-                    channel.writeAndFlush(new MessageRequestPacket(line));
+                if (!SessionUtil.hasLogin(channel)) {
+                    System.out.println("输入用户名登录: ");
+                    String username = sc.nextLine();
+                    loginRequestPacket.setUsername(username);
+                    // 密码使用默认的
+                    loginRequestPacket.setPassword("pwd");
+                    channel.writeAndFlush(loginRequestPacket);
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    String toUserId = sc.next();
+                    String message = sc.next();
+                    channel.writeAndFlush(new MessageRequestPacket(toUserId, message));
                 }
             }
         });
