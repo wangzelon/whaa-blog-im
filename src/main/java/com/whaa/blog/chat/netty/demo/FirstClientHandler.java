@@ -13,21 +13,24 @@ import java.util.Date;
 public class FirstClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println(new Date()+":客户端写数据");
-        ByteBuf byteBuf=getByteBuf(ctx);
-        ctx.channel().writeAndFlush(byteBuf);
+        System.out.println(new Date() + ":客户端写数据");
+        for (int i = 0; i < 1000; i++) {
+            ByteBuf byteBuf = getByteBuf(ctx,i+1);
+            ctx.channel().writeAndFlush(byteBuf);
+        }
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf byteBuf = (ByteBuf) msg;
+        ByteBuf byteBuf = (ByteBuf)msg;
         System.out.println(new Date() + ": 客户端读到数据 -> " + byteBuf.toString(Charset.forName("utf-8")));
     }
 
-    private ByteBuf getByteBuf(ChannelHandlerContext ctx) {
+    private ByteBuf getByteBuf(ChannelHandlerContext ctx, int sqe) {
         ByteBuf buffer = ctx.alloc().buffer();
         // 2. 准备数据，指定字符串的字符集为 utf-8
-        byte[] bytes = "你好，Whaa!".getBytes(Charset.forName("utf-8"));
+        String str = "你好，Whaa" + sqe + "!\n";
+        byte[] bytes = str.getBytes(Charset.forName("utf-8"));
         // 3. 填充数据到 ByteBuf
         buffer.writeBytes(bytes);
         return buffer;

@@ -4,6 +4,7 @@ import com.whaa.blog.chat.netty.client.handler.LoginResponseHandler;
 import com.whaa.blog.chat.netty.client.handler.MessageResponseHandler;
 import com.whaa.blog.chat.netty.codec.PacketDecoder;
 import com.whaa.blog.chat.netty.codec.PacketEncoder;
+import com.whaa.blog.chat.netty.protocol.Spliter;
 import com.whaa.blog.chat.netty.protocol.request.MessageRequestPacket;
 import com.whaa.blog.common.thread.ThreadPoolManager;
 import com.whaa.blog.common.util.LoginUtil;
@@ -43,6 +44,9 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
+                        //测试沾包
+//                        ch.pipeline().addLast(new FirstClientHandler());
+                        ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
