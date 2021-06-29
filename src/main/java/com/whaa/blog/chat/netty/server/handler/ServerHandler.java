@@ -1,11 +1,11 @@
-package com.whaa.blog.chat.netty.handler;
+package com.whaa.blog.chat.netty.server.handler;
 
 import com.whaa.blog.chat.netty.protocol.request.LoginRequestPacket;
 import com.whaa.blog.chat.netty.protocol.response.LoginResponsePacket;
 import com.whaa.blog.chat.netty.protocol.request.MessageRequestPacket;
 import com.whaa.blog.chat.netty.protocol.response.MessageResponsePacket;
 import com.whaa.blog.chat.netty.protocol.Packet;
-import com.whaa.blog.chat.netty.protocol.PacketCodeC;
+import com.whaa.blog.chat.netty.codec.PacketCodeC;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -40,7 +40,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                 System.out.println(new Date() + ": 登录失败!");
             }
             // 登录响应
-            ByteBuf responseByteBuf = PacketCodeC.INSTANCE.encode(ctx.alloc(), loginResponsePacket);
+            ByteBuf responseByteBuf = PacketCodeC.INSTANCE.encode(ctx.alloc().buffer(), loginResponsePacket);
             ctx.channel().writeAndFlush(responseByteBuf);
         } else if (packet instanceof MessageRequestPacket) {
             // 处理消息
@@ -49,7 +49,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
             MessageResponsePacket messageResponsePacket = new MessageResponsePacket();
             messageResponsePacket.setMessage("服务端回复【" + messageRequestPacket.getMessage() + "】");
-            ByteBuf responseByteBuf = PacketCodeC.INSTANCE.encode(ctx.alloc(), messageResponsePacket);
+            ByteBuf responseByteBuf = PacketCodeC.INSTANCE.encode(ctx.alloc().buffer(), messageResponsePacket);
             ctx.channel().writeAndFlush(responseByteBuf);
         }
     }

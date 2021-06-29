@@ -1,12 +1,12 @@
-package com.whaa.blog.chat.netty.protocol;
+package com.whaa.blog.chat.netty.codec;
 
+import com.whaa.blog.chat.netty.protocol.Packet;
 import com.whaa.blog.chat.netty.protocol.request.LoginRequestPacket;
 import com.whaa.blog.chat.netty.protocol.request.MessageRequestPacket;
 import com.whaa.blog.chat.netty.protocol.response.LoginResponsePacket;
 import com.whaa.blog.chat.netty.protocol.response.MessageResponsePacket;
 import com.whaa.blog.chat.netty.protocol.serializer.Serializer;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class PacketCodeC {
     private static final int MAGIC_NUMBER = 0x12345678;
     private static final Map<Byte, Class<? extends Packet>> packetTypeMap;
     private static final Map<Byte, Serializer> serializerMap;
-    public static final PacketCodeC INSTANCE=new PacketCodeC();
+    public static final PacketCodeC INSTANCE = new PacketCodeC();
 
     static {
         packetTypeMap = new HashMap<>();
@@ -31,9 +31,8 @@ public class PacketCodeC {
         serializerMap = new HashMap<>();
         serializerMap.put(Serializer.DEFAULT.getSerializerAlgorithm(), Serializer.DEFAULT);
     }
-    public  ByteBuf encode(ByteBufAllocator byteBufAllocator,Packet packet) {
-        // 1. 创建 ByteBuf 对象
-        ByteBuf byteBuf =byteBufAllocator.ioBuffer();
+
+    public ByteBuf encode(ByteBuf byteBuf, Packet packet) {
         // 2. 序列化 Java 对象
         byte[] bytes = Serializer.DEFAULT.serialize(packet);
 
@@ -48,7 +47,7 @@ public class PacketCodeC {
         return byteBuf;
     }
 
-    public  Packet decode(ByteBuf byteBuf) {
+    public Packet decode(ByteBuf byteBuf) {
         // 跳过 magic number
         byteBuf.skipBytes(4);
 

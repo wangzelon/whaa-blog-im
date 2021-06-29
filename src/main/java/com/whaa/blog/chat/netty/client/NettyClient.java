@@ -1,12 +1,13 @@
 package com.whaa.blog.chat.netty.client;
 
-import com.whaa.blog.chat.netty.handler.ClientHandler;
+import com.whaa.blog.chat.netty.client.handler.LoginResponseHandler;
+import com.whaa.blog.chat.netty.client.handler.MessageResponseHandler;
+import com.whaa.blog.chat.netty.codec.PacketDecoder;
+import com.whaa.blog.chat.netty.codec.PacketEncoder;
 import com.whaa.blog.chat.netty.protocol.request.MessageRequestPacket;
-import com.whaa.blog.chat.netty.protocol.PacketCodeC;
 import com.whaa.blog.common.thread.ThreadPoolManager;
 import com.whaa.blog.common.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -42,7 +43,10 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new ClientHandler());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         // 4.建立连接
@@ -53,6 +57,7 @@ public class NettyClient {
         bootstrap.connect(addr, port).addListener(future -> {
             //连接成功
             if (future.isSuccess()) {
+                System.out.println(new Date() + ": 连接成功，启动控制台线程……");
                 Channel channel = ((ChannelFuture)future).channel();
                 // 连接成功之后，启动控制台线程
                 startConsoleThread(channel);
@@ -76,11 +81,7 @@ public class NettyClient {
                     System.out.println("输入消息发送至服务端: ");
                     Scanner sc = new Scanner(System.in);
                     String line = sc.nextLine();
-
-                    MessageRequestPacket packet = new MessageRequestPacket();
-                    packet.setMessage(line);
-                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), packet);
-                    channel.writeAndFlush(byteBuf);
+                    channel.writeAndFlush(new MessageRequestPacket(line));
                 }
             }
         });

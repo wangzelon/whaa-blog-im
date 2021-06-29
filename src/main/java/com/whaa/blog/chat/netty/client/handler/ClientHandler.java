@@ -1,10 +1,10 @@
-package com.whaa.blog.chat.netty.handler;
+package com.whaa.blog.chat.netty.client.handler;
 
 import com.whaa.blog.chat.netty.protocol.request.LoginRequestPacket;
 import com.whaa.blog.chat.netty.protocol.response.LoginResponsePacket;
 import com.whaa.blog.chat.netty.protocol.response.MessageResponsePacket;
 import com.whaa.blog.chat.netty.protocol.Packet;
-import com.whaa.blog.chat.netty.protocol.PacketCodeC;
+import com.whaa.blog.chat.netty.codec.PacketCodeC;
 import com.whaa.blog.common.util.LoginUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -27,7 +27,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         loginRequestPacket.setPassword("123456");
 
         // 编码
-        ByteBuf buffer = PacketCodeC.INSTANCE.encode(ctx.alloc(), loginRequestPacket);
+        ByteBuf buffer = PacketCodeC.INSTANCE.encode(ctx.alloc().buffer(), loginRequestPacket);
 
         // 写数据
         ctx.channel().writeAndFlush(buffer);

@@ -1,19 +1,15 @@
 package com.whaa.blog.chat.netty.server;
 
-import com.whaa.blog.chat.netty.event.InBoundHandlerA;
-import com.whaa.blog.chat.netty.event.InBoundHandlerB;
-import com.whaa.blog.chat.netty.event.InBoundHandlerC;
-import com.whaa.blog.chat.netty.event.OutBoundHandlerA;
-import com.whaa.blog.chat.netty.event.OutBoundHandlerB;
-import com.whaa.blog.chat.netty.event.OutBoundHandlerC;
-import com.whaa.blog.chat.netty.handler.ServerHandler;
+import com.whaa.blog.chat.netty.codec.PacketDecoder;
+import com.whaa.blog.chat.netty.codec.PacketEncoder;
+import com.whaa.blog.chat.netty.server.handler.LoginRequestHandler;
+import com.whaa.blog.chat.netty.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.AttributeKey;
 
 /**
  * created by wangzelong 2021-06-08 16:56
@@ -31,14 +27,10 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
-//                        ch.pipeline().addLast(new ServerHandler());
-                        ch.pipeline().addLast(new InBoundHandlerA());
-                        ch.pipeline().addLast(new InBoundHandlerB());
-                        ch.pipeline().addLast(new InBoundHandlerC());
-
-                        ch.pipeline().addLast(new OutBoundHandlerA());
-                        ch.pipeline().addLast(new OutBoundHandlerB());
-                        ch.pipeline().addLast(new OutBoundHandlerC());
+                       ch.pipeline().addLast(new PacketDecoder());
+                       ch.pipeline().addLast(new LoginRequestHandler());
+                       ch.pipeline().addLast(new MessageRequestHandler());
+                       ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         bind(serverBootstrap, 1000);

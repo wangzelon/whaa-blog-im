@@ -3,7 +3,7 @@ package com.whaa.blog;
 import com.whaa.blog.chat.netty.protocol.JSONSerializer;
 import com.whaa.blog.chat.netty.protocol.request.LoginRequestPacket;
 import com.whaa.blog.chat.netty.protocol.Packet;
-import com.whaa.blog.chat.netty.protocol.PacketCodeC;
+import com.whaa.blog.chat.netty.codec.PacketCodeC;
 import com.whaa.blog.chat.netty.protocol.serializer.Serializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -26,7 +26,7 @@ public class blog {
 
         PacketCodeC packetCodeC = new PacketCodeC();
         ByteBufAllocator byteBufAllocator=ByteBufAllocator.DEFAULT;
-        ByteBuf byteBuf = packetCodeC.encode(byteBufAllocator,loginRequestPacket);
+        ByteBuf byteBuf = packetCodeC.encode(byteBufAllocator.buffer(),loginRequestPacket);
         System.out.println(byteBuf);
         Packet decodedPacket = packetCodeC.decode(byteBuf);
         System.out.println(decodedPacket);
