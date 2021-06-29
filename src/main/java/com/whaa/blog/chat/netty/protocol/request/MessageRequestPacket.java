@@ -12,9 +12,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class MessageRequestPacket extends Packet {
 
-    private String message;
 
     private String toUserId;
+    private String message;
 
     @Override
     public Byte getCommand() {

@@ -93,6 +93,7 @@ public class NettyClient {
                     loginRequestPacket.setPassword("pwd");
                     channel.writeAndFlush(loginRequestPacket);
 
+
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {

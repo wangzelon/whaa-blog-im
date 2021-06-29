@@ -24,16 +24,6 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
         }
     }
 
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        //        LoginRequestPacket loginRequestPacket=new LoginRequestPacket();
-        //        loginRequestPacket.setUserId(UUID.randomUUID().toString());
-        //        loginRequestPacket.setUsername("admin");
-        //        loginRequestPacket.setPassword("123456");
-        //        // 写数据
-        //        ctx.channel().writeAndFlush(loginRequestPacket);
-        super.channelActive(ctx);
-    }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {

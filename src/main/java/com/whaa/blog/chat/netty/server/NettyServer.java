@@ -40,7 +40,7 @@ public class NettyServer {
                         ch.pipeline().addLast(new Spliter());  //拆包器
                         ch.pipeline().addLast(new PacketDecoder());  //解码器
                         ch.pipeline().addLast(new LoginRequestHandler());//登录处理器
-                        ch.pipeline().addLast(new AuthHandler());
+                        ch.pipeline().addLast(new AuthHandler()); //权限认证器
                         ch.pipeline().addLast(new MessageRequestHandler());//消息处理器
                         ch.pipeline().addLast(new PacketEncoder()); // 编码器
                     }
