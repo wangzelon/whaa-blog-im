@@ -33,4 +33,11 @@ public class blog {
         Assert.assertArrayEquals(serializer.serialize(loginRequestPacket), serializer.serialize(decodedPacket));
 
     }
+
+    @Test
+    public void test(){
+
+    }
+
+
 }
